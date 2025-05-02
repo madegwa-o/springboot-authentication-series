@@ -1,15 +1,19 @@
 package com.example.FullBackend.authentication.jwt;
 
 import com.example.FullBackend.authentication.CustomUserDetailsService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -25,11 +29,35 @@ public class JwtService {
 
 
     public String extractUserName(String jwtToken) {
-        return null;
+        return extractClaim(jwtToken,Claims::getSubject);
     }
 
     public boolean isTokenValid(String jwtToken,String username) {
-        return true;
+        String extractedUserName = extractUserName(jwtToken);
+        return extractedUserName.equals(username) && !isTokenExpired(jwtToken);
+    }
+
+    private boolean isTokenExpired(String jwtToken) {
+        return extractedExpiration(jwtToken).before(new Date());
+    }
+
+    private Date extractedExpiration(String jwtToken) {
+        return extractClaim(jwtToken, Claims::getExpiration);
+    }
+
+    private <T> T extractClaim(String jwtToken, Function<Claims, T> claimsResolver) {
+
+        Claims claims = extractAllClaims(jwtToken);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String jwtToken) {
+        Key key = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwtToken)
+                .getBody();
     }
 
     public String getAccessToken(UserDetails userDetails) {
@@ -57,12 +85,13 @@ public class JwtService {
     }
 
     private String createToken(String username, Map<String,Object> claims,long expiration) {
+        Key key = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key)
                 .compact();
     }
 }

@@ -18,7 +18,7 @@ spring:
       uri: mongodb://localhost:27017/fullbackend
 
 server:
-  port: 8080
+  port: 8082
 
 logging:
   level:
@@ -42,7 +42,6 @@ jwt:
 
 
   access-token:
-    expiration: 5
-
+    expiration: 900000 # 15 minutes in milliseconds
   refresh-token:
-    expiration: 5
+    expiration: 604800000 # 7 days in milliseconds
