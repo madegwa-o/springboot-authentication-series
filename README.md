@@ -5,7 +5,7 @@ Welcome to the **Spring Boot Authentication Series** repository! This project de
 ## Branches Overview
 
 ### 1. **Main Branch**
-This branch contains the minimal setup for the project. It serves as the starting point for the authentication implementations. Use this branch to understand the foundational structure before diving into specific authentication methods.
+This branch contains the minimal setup for the project. It serves as the starting point for the authentication implementations. Use this branch to understand the foundational structure before diving into specific authentication methods.(it's an empty project with the dependancies added)
 
 ### 2. **Form-Login Branch**
 The `form-login` branch demonstrates how to implement traditional form-based login authentication using Spring Security. It includes:
