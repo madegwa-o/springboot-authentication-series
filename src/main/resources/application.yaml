@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: FullBackend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/authdb
+    username: dev
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fullbackend
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework: INFO
+
+    org.springframework.security: DEBUG # Logs Spring Security activities like authentication and authorization.
+    org.springframework.security.web: DEBUG # Logs web security events such as filters and access decisions.
+    org.springframework.security.authentication: DEBUG # Logs authentication-related details.
+    com.example: DEBUG # Application-specific logging.
+
+
+graphql:
+  schema:
+    printer:
+      enabled: true
+
+
