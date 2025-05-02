@@ -31,16 +31,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
-                            .requestMatchers("/custom-login", "/custom-error").permitAll()
+                            .requestMatchers("/login", "/custom-error").permitAll()
                             .anyRequest().authenticated();
                 })
-                .formLogin( form -> {
-                    form
-                            .loginPage("/custom-login")
-                            .loginProcessingUrl("/submission")
-                            .failureForwardUrl("/custom-error")
-                            .defaultSuccessUrl("/custom-success");
-                })
+
 
                 .sessionManagement( (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class)
