@@ -18,7 +18,7 @@ spring:
       uri: mongodb://localhost:27017/fullbackend
 
 server:
-  port: 8082
+  port: 8080
 
 logging:
   level:
@@ -45,3 +45,13 @@ jwt:
     expiration: 900000 # 15 minutes in milliseconds
   refresh-token:
     expiration: 604800000 # 7 days in milliseconds
+
+production:
+  url: https://karuexchange.shop/
+frontend:
+  url: https://ke-pwa.onrender.com/
+development:
+  url: http://localhost:5173
+build:
+  url: http://localhost:3000
+

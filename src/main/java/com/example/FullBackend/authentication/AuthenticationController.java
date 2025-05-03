@@ -5,6 +5,7 @@ import com.example.FullBackend.authentication.dto.LoginRequest;
 import com.example.FullBackend.authentication.dto.LoginResponse;
 import com.example.FullBackend.authentication.jwt.JwtService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
@@ -57,7 +61,6 @@ public class AuthenticationController {
 
             loginResponse =  LoginResponse.builder()
                     .accessToken(accessToken)
-                    .refreshToken(refreshToken)
                     .message("success")
                     .build();
 
@@ -77,10 +80,42 @@ public class AuthenticationController {
 
     }
 
-    @GetMapping("/mock-data")
-    public String mockData() {
-        return "mock-data";
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            System.out.println("Refresh Token endpoint called");
+            logger.info("Refresh Token endpoint called");
+            // Extract refresh token from cookies
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No refresh token provided");
+            }
+
+            String refreshToken = Arrays.stream(cookies)
+                    .filter(cookie -> "REFRESH_TOKEN".equals(cookie.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+
+            String username = jwtService.extractUserName(refreshToken);
+
+            if (refreshToken == null || !jwtService.isTokenValid(refreshToken, username)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
+            }
+
+            // Extract username from refresh token and generate a new access token
+            String newAccessToken = jwtService.getAccessToken(customUserDetailsService.loadUserByUsername(username));
+
+            System.out.println("Access Token Has been refreshed successfully");
+            // Return new access token
+            return ResponseEntity.ok(LoginResponse.builder()
+                    .accessToken(newAccessToken)
+                    .message("Token refreshed successfully")
+                    .build());
+
+        } catch (Exception e) {
+            log.error("Error refreshing token", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not refresh token");
+        }
     }
-
-
 }

@@ -1,24 +1,33 @@
 package com.example.FullBackend.authentication.config;
 
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebMvc
-public class CorsConfig {
+public class CorsConfig implements WebMvcConfigurer {
 
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry){
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
-            }
-        };
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    @Value("${development.url}")
+    private String developmentUrl;
+
+    @Value("${production.url}")
+    private String productionUrl;
+
+    @Value("${build.url}")
+    private String buildUrl;
+
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(frontendUrl, developmentUrl, productionUrl, buildUrl)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);  // Ensure you allow credentials if using cookies or authentication headers
     }
 }

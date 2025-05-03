@@ -26,5 +26,6 @@ public class Course {
     private String courseDescription;
 
     @ManyToMany(mappedBy = "courses",fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<User> user;
 }

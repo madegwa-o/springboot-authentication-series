@@ -2,6 +2,7 @@ package com.example.FullBackend.user;
 
 
 import com.example.FullBackend.course.Course;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
+    @JsonManagedReference
     private List<Course> courses;
 
     @Enumerated(EnumType.STRING)
