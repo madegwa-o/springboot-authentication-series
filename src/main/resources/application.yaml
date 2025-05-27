@@ -1,0 +1,85 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: counselling-section
+
+
+  datasource:
+    #    url: jdbc:postgresql://dpg-d0hjnd3e5dus73b3p2s0-a.oregon-postgres.render.com:5432/mydb_vcnq
+    #    username: spongebob
+    #    password: 3n8Wkndrkg6IM0k50TlgrwE6lseISeuN
+
+    #    url: jdbc:postgresql://localhost:5432/postgres
+    #    password: 1234
+    #    username: postgres
+    #    driver-class-name: org.postgresql.Driver
+
+    url: jdbc:mysql://localhost:3306/authdb
+    password: 1234
+    username: dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/mydb
+  #      uri: mongodb+srv://dev:XjvHaRk2lkG5r2MX@ossycluster.gt2ff.mongodb.net/?retryWrites=true&w=majority&appName=OssyCluster
+  #      database: shopdb
+  sql:
+    init:
+      mode: always
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+
+
+logging:
+  level:
+    org.springframework: INFO
+
+    org.springframework.security: DEBUG # Logs Spring Security activities like authentication and authorization.
+    org.springframework.security.web: DEBUG # Logs web security events such as filters and access decisions.
+    org.springframework.security.authentication: DEBUG # Logs authentication-related details.
+    com.example: DEBUG # Application-specific logging.
+
+
+graphql:
+  schema:
+    printer:
+      enabled: true
+
+
+jwt:
+  secret:
+    key: d08a389cf1770223c5cc297883e9a79aea9b02d8fb56f2beb0f10c726a1481edfc1b08d45b5717ab02c53ff82b0f14e00bde635156d91044b9241ec50a9fc849bd5ebbae096ad7df36e51e04fb9ef531c330080edaf857291cee67aaccd551e32921636ce47710b0f7d1143bdbf30a258a68efceded95387ba6820fb39fa611e5f38455275657bfd3171cc553b4ee163fd9d64acf4d688834005e8d58b05b6799860bcace6e8d8c18b1840f46fdc22a3c5841d23410eaaeba7c0359a0e47b028a340733508a37d282cb2ddc2dcac40517066e76e5b917aff9634bc6f1896332fab9cc64272be84b1e9f39874c705a6f9dd4efffef08a0a2b3020265090d5f271
+
+
+  access-token:
+    expiration: 900000 # 15 minutes in milliseconds
+  refresh-token:
+    expiration: 604800000 # 7 days in milliseconds
+
+frontend:
+  url: https://karu-counselling-section.netlify.app
+development:
+  url: http://localhost:5173
+build:
+  url: http://localhost:3000
+
+backend:
+  url: render-spring-backend.onrender.com
+
+
+
+#    username: karuexchange@gmail.com
+#    password: kwjlaakbczjlcjcx
